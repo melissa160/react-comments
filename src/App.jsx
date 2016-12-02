@@ -4,7 +4,7 @@ class CommentForm extends React.Component{
   render(){
     return (
         <form  onSubmit={this._handleSubmit.bind(this)}>
-            <h3>Join the discussion is great</h3>
+            <h3>Join the discussion is great!</h3>
             <div>
               <input placeholder="Name:" ref={(input) => this._author = input} />
               <textarea placeholder="Comment:" ref={(textarea) => this._body = textarea}></textarea>
