@@ -77,6 +77,15 @@ button:hover{
   background: #399a9e;
 }
 
+a{
+  font-size: 10px;
+  cursor: pointer;
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 10px;
+  color: peru;
+}
+
 @media only screen and (max-device-width: 500px){
   .comment, form{
     width: 80vw;

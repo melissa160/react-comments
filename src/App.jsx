@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 import React from 'react';
 
 class CommentForm extends React.Component{
@@ -6,8 +8,8 @@ class CommentForm extends React.Component{
         <form  onSubmit={this._handleSubmit.bind(this)}>
             <h3>Join the discussion is great!</h3>
             <div>
-              <input placeholder="Name:" ref={(input) => this._author = input} />
-              <textarea placeholder="Comment:" ref={(textarea) => this._body = textarea}></textarea>
+              <input placeholder="Name:" ref={(input) => this._codeNames= input} />
+              <textarea placeholder="Comment:" ref={(textarea) => this._altText = textarea}></textarea>
             </div>
             <div>
               <button type="submit">
@@ -21,10 +23,10 @@ class CommentForm extends React.Component{
   _handleSubmit(event){
     event.preventDefault();
 
-    let author = this._author;
-    let body = this._body;
+    let codeNames = this._codeNames;
+    let altText = this._altText;
 
-    this.props.addComment(author.value, body.value);
+    this.props.addComment(codeNames.value, altText.value);
   }
 }
 
@@ -32,28 +34,34 @@ class Comment extends React.Component{
   render(){
     return(
       <div className="comment" >
-        <h4>{this.props.author}</h4>
-        <p>{this.props.body}</p>
+        <h4>{this.props.codeNames}</h4>
+        <p>{this.props.altText}</p>
+        <a>Delete Comment</a>
       </div>
     );
   }
 }
 
 class CommentBox extends React.Component{
+  
   constructor() {
     super();
 
     this.state = {
       showComments: false,
-      comments: [
-        {id:1, author:"Melissa Ramirez", body:"Great picture!Great picture!Great picture!Great picture!Great picture!Great picture!"},
-        {id:2, author:"Cesar Pino", body:"Excellent stuff"}
-      ]
+      comments: []
     };
+
+
+  }
+
+  componentWillMount(){
+    this._fetchComments();
   }
 
   render(){
-    const comments = this._getComments();
+    let comments = this._getComments();
+    console.log("come " + comments)
     let commentNodes;
     let buttonText = 'Show Comments';
 
@@ -72,13 +80,54 @@ class CommentBox extends React.Component{
       </div>
     );
   }
+
+  componentDidMount(event){
+    event.preventDefault();
+    this._timer = setInterval(() => this._fetchComments(), 5000);
+
+  }
+
+  componentWillUnmount(){
+    clearInterval(this._timer);
+  }
+
+  _fetchComments(){
+/*    jQuery.ajax({
+      url: 'https://www.freecodecamp.com/json/cats.json',
+      method: 'GET',
+      //dataType: 'xml/html/script/json/jsonp',
+      //data: {param1: 'value1'},
+      complete: function(xhr, textStatus) {
+        //called when complete
+      },
+      success: (comments) => {
+        //called when successful
+        this.setState({ comments })
+      },
+      error: function(xhr, textStatus, errorThrown) {
+        //called when there is an error
+      }
+    });*/
+
+    axios.get('http://cors-anywhere.herokuapp.com/https://www.freecodecamp.com/json/cats.json').then(
+        commentss => {
+        //called when successful
+        const comments = commentss.data;
+        this.setState({ comments })
+      }
+      )
+    
+
+  }
+
   _getComments(){
    
     return this.state.comments.map((comment)=>{
+    
       return (
           <Comment 
-            author={comment.author} 
-            body={comment.body} 
+            codeNames={comment.codeNames[0]} 
+            altText={comment.altText} 
             key={comment.id}/>
         );
     });
@@ -94,12 +143,12 @@ class CommentBox extends React.Component{
     }
   }
 
-  _addComment(author, body){
-     console.log("author " + author);
+  _addComment(codeNames, altText){
+     console.log("codeNames " + codeNames);
     const comment = {
       id: this.state.comments.length+1,
-      author,
-      body
+      codeNames,
+      altText
     }
     this.setState({ comments: this.state.comments.concat([comment])});
   }
