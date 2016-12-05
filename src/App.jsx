@@ -109,7 +109,7 @@ class CommentBox extends React.Component{
       }
     });*/
     //http://cors-anywhere.herokuapp.com/
-    axios.get('https://www.freecodecamp.com/json/cats.json').then(
+    axios.get('https://cors-anywhere.herokuapp.com/https://www.freecodecamp.com/json/cats.json').then(
         commentss => {
         //called when successful
         const comments = commentss.data;
